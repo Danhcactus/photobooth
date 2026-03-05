@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Photobooth Camera</title>
+
+<style>
+body {
+    text-align: center;
+    font-family: Arial;
+    background: #111;
+    color: white;
+}
+
+video {
+    width: 300px;
+    border-radius: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+img {
+    width: 200px;
+    margin: 10px;
+    border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Photobooth Camera</h1>
+
+<video id="video" autoplay></video>
+<br>
+<button onclick="takePhoto()">Chụp ảnh</button>
+
+<h2>Ảnh đã chụp:</h2>
+<div id="gallery"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// 🔥 DÁN CONFIG FIREBASE CỦA BẠN VÀO ĐÂY
+const firebaseConfig = {
+  apiKey: "DAN_API_KEY",
+  authDomain: "DAN_AUTH_DOMAIN",
+  projectId: "DAN_PROJECT_ID",
+  storageBucket: "DAN_STORAGE",
+  messagingSenderId: "DAN_SENDER",
+  appId: "DAN_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// CAMERA
+const video = document.getElementById("video");
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+    video.srcObject = stream;
+})
+.catch(err => {
+    alert("Không bật được camera!");
+});
+
+// CHỤP ẢNH
+window.takePhoto = async function() {
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0);
+
+    const imageData = canvas.toDataURL("image/png");
+
+    await addDoc(collection(db, "photos"), {
+        image: imageData,
+        time: new Date()
+    });
+
+    loadPhotos();
+}
+
+// LOAD ẢNH
+async function loadPhotos() {
+    const gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";
+
+    const querySnapshot = await getDocs(collection(db, "photos"));
+    querySnapshot.forEach((doc) => {
+        const img = document.createElement("img");
+        img.src = doc.data().image;
+        gallery.appendChild(img);
+    });
+}
+
+loadPhotos();
+
+</script>
+
+</body>
+</html>
