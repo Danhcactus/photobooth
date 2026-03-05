@@ -47,14 +47,14 @@ img {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// 🔥 DÁN CONFIG FIREBASE CỦA BẠN VÀO ĐÂY
 const firebaseConfig = {
-  apiKey: "DAN_API_KEY",
-  authDomain: "DAN_AUTH_DOMAIN",
-  projectId: "DAN_PROJECT_ID",
-  storageBucket: "DAN_STORAGE",
-  messagingSenderId: "DAN_SENDER",
-  appId: "DAN_APP_ID"
+  apiKey: "AIzaSyBNd26aRpaB0UK7E1XqVDeH_PDY2bNqA4c",
+  authDomain: "photobooth-8a1ea.firebaseapp.com",
+  projectId: "photobooth-8a1ea",
+  storageBucket: "photobooth-8a1ea.firebasestorage.app",
+  messagingSenderId: "48083573124",
+  appId: "1:48083573124:web:9a1727d41bd6e80fd625d1",
+  measurementId: "G-H5XBHMX9XK"
 };
 
 const app = initializeApp(firebaseConfig);
